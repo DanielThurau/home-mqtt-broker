@@ -50,7 +50,7 @@ def on_connect(client, _userdata, _flags, reason_code, _properties):
 # The callback for when a PUBLISH message is received from the server.
 def on_message(_client, _userdata, msg):
     data = process_json(msg.payload)
-    print(f"{data['timestamp']},{data["power"]},{data["apparent_power"]},{data["reactive_power"]},{data["factor"]},{data["voltage"]},{data["current"]},{data["today_kWh"]},{data["yesterday_kWh"]}")
+    print(f"{data['timestamp']},{data['power']},{data['apparent_power']},{data['reactive_power']},{data['factor']},{data['voltage']},{data['current']},{data['today_kWh']},{data['yesterday_kWh']}")
 
 
 if __name__ == "__main__":
