@@ -95,3 +95,7 @@ The published message looks like this:
 
 which is some easy JSON to process. The tasmota plug configures how often to send this telemetry, and I currently have it publish every 30 seconds. `subscriber.py` is a short python script that will subscribe to the topic, on a message it will process the json and convert it to row data, and print to stdout. In the next iteration I'll probably dump this into a sqlite db for use later.
 
+## What's Next
+
+This script is shaping out to be a problem solved with a data pipeline. For now, that is overkill, but as I need to start eeking out performance, I'll need to change the architecture and most likely the programming language. For now this serves my purpose and I will be Keepin' It Simple Stupid (KISS) ✅.
+
