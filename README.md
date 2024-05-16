@@ -95,7 +95,30 @@ The published message looks like this:
 
 which is some easy JSON to process. The tasmota plug configures how often to send this telemetry, and I currently have it publish every 30 seconds. `subscriber.py` is a short python script that will subscribe to the topic, on a message it will process the json and convert it to row data, and print to stdout. In the next iteration I'll probably dump this into a sqlite db for use later.
 
-## What's Next
+## Data pipeline
 
-This script is shaping out to be a problem solved with a data pipeline. For now, that is overkill, but as I need to start eeking out performance, I'll need to change the architecture and most likely the programming language. For now this serves my purpose and I will be Keepin' It Simple Stupid (KISS) ✅.
+I ended up writing [amleth](https://github.com/DanielThurau/amleth) to run on another home server. It subscribes to the broker 
+and pushes messages down a processing pipeline that eventually inserts it into a database. It's pretty cool, you should check it out.
 
+## Log Rotation
+
+I set up mosquitto to be included in my logwatch daily email, but ended up needing to rotate the logs. Mosquitto comes with a 
+default configuration, but it would only rotate after 100k file size. This was too many logs put into my daily email so I updated
+the configuration to rotate every single day regardless of file size.
+
+```
+$ cat /etc/logrotate.d/mosquitto
+/var/log/mosquitto/mosquitto.log {
+	rotate 3
+	daily
+	delaycompress
+	notifempty
+	create 640 mosquitto mosquitto
+	missingok
+	postrotate
+		if invoke-rc.d mosquitto status > /dev/null 2>&1; then \
+			invoke-rc.d mosquitto reload > /dev/null 2>&1; \
+		fi;
+	endscript
+}
+```
